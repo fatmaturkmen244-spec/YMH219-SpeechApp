@@ -314,22 +314,25 @@ public sealed class MainForm : Form
         sttCard.Controls.Add(_cmbRecognizers);
 
         // STT Butonları
-        _btnSttStart = CreateStudioButton("🎙️ Dinlemeyi Başlat", 14, 90, 142, 36, Color.FromArgb(5, 150, 105), Color.White);
+        _btnSttStart = CreateStudioButton("▶ Mikrofon Dinle", 14, 90, 134, 36, Color.FromArgb(5, 150, 105), Color.White);
         _btnSttStart.Click += (_, _) => HandleSttStart();
         sttCard.Controls.Add(_btnSttStart);
 
-        _btnSttStop = CreateStudioButton("⏹ Durdur", 162, 90, 92, 36, Color.FromArgb(71, 85, 105), Color.White);
+        _btnSttStop = CreateStudioButton("⏹ Durdur", 154, 90, 96, 36, Color.FromArgb(71, 85, 105), Color.White);
         _btnSttStop.Enabled = false;
         _btnSttStop.Click += (_, _) => HandleSttStop();
         sttCard.Controls.Add(_btnSttStop);
 
-        _btnSttClear = CreateStudioButton("🗑 Temizle", 260, 90, 92, 36, Color.FromArgb(239, 68, 68), Color.White);
+        _btnSttClear = CreateStudioButton("🗑 Temizle", 256, 90, 96, 36, Color.FromArgb(239, 68, 68), Color.White);
         _btnSttClear.Click += (_, _) =>
         {
             _rtbSttOutput.Clear();
             _lstSttTimestampLog.Items.Clear();
             _recognizedEntries.Clear();
-            _lblFooterStatus.Text = "Durum: Speech-to-Text metin alanı ve zaman damgalı kayıtlar temizlendi.";
+            if (_lblFooterStatus != null)
+            {
+                _lblFooterStatus.Text = "Durum: Speech-to-Text metin alanı ve zaman damgalı kayıtlar temizlendi.";
+            }
         };
         sttCard.Controls.Add(_btnSttClear);
 
