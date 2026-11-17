@@ -214,6 +214,16 @@ public sealed class MainForm : Form
         };
         ttsSettingsPanel.Controls.Add(lblRate);
 
+        _lblRateVal = new Label
+        {
+            Text = "0 (Normal)",
+            Font = new Font("Consolas", 9f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(159, 18, 57),
+            Location = new Point(366, 86),
+            AutoSize = true
+        };
+        ttsSettingsPanel.Controls.Add(_lblRateVal);
+
         _trkRate = new TrackBar
         {
             Minimum = -10,
@@ -226,16 +236,6 @@ public sealed class MainForm : Form
         _trkRate.ValueChanged += (_, _) => _lblRateVal.Text = $"{_trkRate.Value:+#;-#;0} (Normal)";
         ttsSettingsPanel.Controls.Add(_trkRate);
 
-        _lblRateVal = new Label
-        {
-            Text = "0 (Normal)",
-            Font = new Font("Consolas", 9f, FontStyle.Bold),
-            ForeColor = Color.FromArgb(159, 18, 57),
-            Location = new Point(366, 86),
-            AutoSize = true
-        };
-        ttsSettingsPanel.Controls.Add(_lblRateVal);
-
         Label lblVol = new()
         {
             Text = "Ses Seviyesi:",
@@ -244,6 +244,16 @@ public sealed class MainForm : Form
             AutoSize = true
         };
         ttsSettingsPanel.Controls.Add(lblVol);
+
+        _lblVolumeVal = new Label
+        {
+            Text = "%95",
+            Font = new Font("Consolas", 9.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(159, 18, 57),
+            Location = new Point(368, 140),
+            AutoSize = true
+        };
+        ttsSettingsPanel.Controls.Add(_lblVolumeVal);
 
         _trkVolume = new TrackBar
         {
@@ -256,16 +266,6 @@ public sealed class MainForm : Form
         };
         _trkVolume.ValueChanged += (_, _) => _lblVolumeVal.Text = $"%{_trkVolume.Value}";
         ttsSettingsPanel.Controls.Add(_trkVolume);
-
-        _lblVolumeVal = new Label
-        {
-            Text = "%95",
-            Font = new Font("Consolas", 9.5f, FontStyle.Bold),
-            ForeColor = Color.FromArgb(159, 18, 57),
-            Location = new Point(368, 140),
-            AutoSize = true
-        };
-        ttsSettingsPanel.Controls.Add(_lblVolumeVal);
 
         // 3. Sağ Kart: Speech-to-Text (Konuşmadan Metne Dönüşüm)
         Panel sttCard = new()

@@ -10,7 +10,20 @@ public sealed class TextToSpeechService : IDisposable
 {
     private readonly SpeechSynthesizer _synthesizer;
     public bool IsPaused { get; private set; }
-    public bool IsSpeaking => _synthesizer.State == SynthesizerState.Speaking;
+    public bool IsSpeaking
+    {
+        get
+        {
+            try
+            {
+                return _synthesizer.State == SynthesizerState.Speaking;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
 
     public event Action<SynthesizerState>? StateChanged;
     public event Action<string>? SpeakCompleted;
@@ -18,24 +31,39 @@ public sealed class TextToSpeechService : IDisposable
     public TextToSpeechService()
     {
         _synthesizer = new SpeechSynthesizer();
-        _synthesizer.SetOutputToDefaultAudioDevice();
-        _synthesizer.StateChanged += (_, e) => StateChanged?.Invoke(e.State);
-        _synthesizer.SpeakCompleted += (_, e) =>
+        try
         {
-            IsPaused = false;
-            if (e.Error != null)
+            _synthesizer.SetOutputToDefaultAudioDevice();
+        }
+        catch
+        {
+            // Ses çıkış aygıtı yoksa veya erişilemiyorsa SpeakTextAsync sırasında bildirilir
+        }
+
+        try
+        {
+            _synthesizer.StateChanged += (_, e) => StateChanged?.Invoke(e.State);
+            _synthesizer.SpeakCompleted += (_, e) =>
             {
-                SpeakCompleted?.Invoke($"Okuma hatası: {e.Error.Message}");
-            }
-            else if (e.Cancelled)
-            {
-                SpeakCompleted?.Invoke("Sesli okuma durduruldu.");
-            }
-            else
-            {
-                SpeakCompleted?.Invoke("Sesli okuma tamamlandı.");
-            }
-        };
+                IsPaused = false;
+                if (e.Error != null)
+                {
+                    SpeakCompleted?.Invoke($"Okuma hatası: {e.Error.Message}");
+                }
+                else if (e.Cancelled)
+                {
+                    SpeakCompleted?.Invoke("Sesli okuma durduruldu.");
+                }
+                else
+                {
+                    SpeakCompleted?.Invoke("Sesli okuma tamamlandı.");
+                }
+            };
+        }
+        catch
+        {
+            // SAPI başlatma kısıtlaması durumunda güvenli devam et
+        }
     }
 
     public IReadOnlyList<string> GetInstalledVoiceNames()
